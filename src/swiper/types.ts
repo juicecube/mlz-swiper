@@ -17,6 +17,10 @@ export enum SwipeDirections {
 
 export type Vector2 = [number, number];
 
+export type HTMLElementEvent<T extends HTMLElement> = React.MouseEvent | TouchEvent | MouseEvent & {
+  target:T;
+}
+
 export type HandledEvents = React.MouseEvent | TouchEvent | MouseEvent
 
 export interface SwipeEventData {
@@ -88,11 +92,18 @@ export type AttachTouch = (el:HTMLElement) => () => void;
 
 export interface CarouselItemProps {
   children:React.ReactNode;
+  className?:string;
+  style?:React.CSSProperties;
+  onClick?:() => void;
  }
 
 export interface CarouselProps {
-  className?:string;
-  children:React.ReactNode;
-  onSlideChange:(activeIndex:number) => void;
-  noSwipingSelector?:string;
+    children:React.ReactNode;
+    onSlideChange:(activeIndex:number) => void;
+    fullscreen?:boolean;
+    noSwipingSelector?:string;
+    onFullscreenClose?:() => void;
+    resistanceDistance?:number;
+    lastSlideMessage?:string;
+    className?:string;
  }

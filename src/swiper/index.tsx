@@ -18,7 +18,7 @@ import { getDirection, rotateXYByAngle, isNoSwipe } from './util';
 
 function getHandlers(
     set:Setter,
-    handlerProps:{ trackMouse:boolean | undefined; noSwipingSelector?:string },
+    handlerProps:{ trackMouse:boolean | undefined; noSwipingSelector?:string }
 ):[
   {
     ref:(element:HTMLElement | null) => void;
@@ -225,7 +225,7 @@ function getHandlers(
 function updateTransientState(
     state:SwipeableState,
     props:SwipeableProps,
-    attachTouch:AttachTouch,
+    attachTouch:AttachTouch
 ) {
   const addState:{ cleanUpTouch?():void } = {};
   // clean up touch handlers if no longer tracking touches
@@ -256,17 +256,17 @@ export function useSwipeable(options:SwipeableProps):SwipeableHandlers {
       getHandlers(
         (stateSetter) => transientState.current = stateSetter(
           transientState.current,
-          transientProps.current,
+          transientProps.current
         ),
-        { trackMouse, noSwipingSelector },
+        { trackMouse, noSwipingSelector }
       ),
-    [trackMouse],
+    [trackMouse]
   );
 
   transientState.current = updateTransientState(
     transientState.current,
     transientProps.current,
-    attachTouch,
+    attachTouch
   );
 
   return handlers;

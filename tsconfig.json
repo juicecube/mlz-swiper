@@ -12,14 +12,7 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "jsx": "react-jsx",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "isolatedModules": true,
-    "noEmit": true
+    "jsx": "react"
   },
   "include": [
     "src"

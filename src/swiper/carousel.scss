@@ -1,8 +1,18 @@
 .carousel-wrapper {
     overflow: hidden;
     position: relative;
+    height: 100%;
+
+  .carousel-wrapper-close {
+    position: absolute;
+    top: 112px;
+    left: 36px;
+    width: 40px;
+    height: 40px;
+  }
 
   .carousel-wrapper-inner {
+    position: relative;
     white-space: nowrap;
     transition: transform 0.3s;
 
@@ -14,6 +24,19 @@
       height: auto;
       touch-action: pan-x;
     }
+
+    .carousel-wrapper-inner-item-last {
+      width: 84px;
+      font-size: 24px;
+      line-height: 28px;
+      color: #636363;
+      // word-wrap: break-word; // 英文的时候需要加上这句，自动换行
+      // word-break: break-all;
+      writing-mode: vertical-lr; // 从左向右 从右向左是 writing-mode: vertical-rl;
+      // writing-mode: tb-lr; // IE浏览器的从左向右 从右向左是 writing-mode: tb-rl; 
+      letter-spacing: 8px; // 字符之间的距离
+      word-spacing: 8px; // 单词之间的距离
+    }
   }
 
   .carousel-wrapper-indicators {
@@ -23,8 +46,7 @@
     position: absolute;
     bottom: 32px;
     right: 32px;
-    background: #000;
-    opacity: 0.4;
+    background: rgba(0, 0, 0, 0.4);
     border-radius: 40px;
     width: 80px;
     color: #fff;
@@ -32,4 +54,18 @@
     line-height: 40px;
   }
   
+}
+
+.carousel-wrapper-fullscreen {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  background: #000;;
+  z-index: 2;
+  align-items: center;
+  justify-content: center;
+
+  .carousel-wrapper-indicators {
+    background: rgba(255, 255, 255, 0.4);
+  }
 }

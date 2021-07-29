@@ -4,7 +4,7 @@ export function getDirection(
     absX:number,
     absY:number,
     deltaX:number,
-    deltaY:number,
+    deltaY:number
 ):SwipeDirections {
   if (absX > absY) {
     if (deltaX > 0) {

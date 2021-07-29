@@ -1,19 +1,29 @@
 import React, { useState, FC } from 'react';
-import classNames from 'classnames';
+import classnames from 'classnames';
 import { CarouselItemProps, CarouselProps, SwipeDirections, SwipeEventData, HandledEvents } from './types';
-import { useSwipeable } from './swiper';
+import closeSvg from './assets/close.svg';
+import { useSwipeable } from './index';
 
 import './carousel.scss';
 
-export const CarouselItem:FC<CarouselItemProps> = ({ children }) => (
-  <div className="carousel-wrapper-inner-item">
+export const CarouselItem:FC<CarouselItemProps> = ({ children, className, ...rest }) => (
+  <div
+    className={classnames('carousel-wrapper-inner-item', className)}
+    {...rest}
+  >
     {children}
   </div>
 );
 
-export const Carousel:FC<CarouselProps> = ({ children, onSlideChange, noSwipingSelector, className }) => {
+export const Carousel:FC<CarouselProps> = ({ children, onSlideChange, noSwipingSelector, fullscreen = false, onFullscreenClose, resistanceDistance, lastSlideMessage }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [translateX, setTranslateX] = useState(0);
+
+  const [client, setClient] = useState({
+    clientWidth: 0,
+    clientHeight: 0,
+  });
+
   const count = React.Children.count(children);
   const lastIndex = count - 1;
 
@@ -57,50 +67,49 @@ export const Carousel:FC<CarouselProps> = ({ children, onSlideChange, noSwipingS
   };
 
   const handleSwiping = (eventData:SwipeEventData) => {
-    const { absX, dir, event } = eventData;
+    const { absX, dir } = eventData;
 
     let newTranslateX = 0;
 
-    let carouselWidth = 0;
-    if (event.target) {
-      // carouselWidth = event.target.clientWidth;
-      carouselWidth = 375;
-    }
-    const isTranslate = activeIndex === 0 ? 0 : activeIndex * carouselWidth;
-
-    console.log('handleSwiping', eventData);
+    // let carouselWidth = 0;
+    // if (event.target) {
+    //   carouselWidth = event.target.clientWidth;
+    // }
+    const isTranslate = activeIndex === 0 ? 0 : activeIndex * client.clientWidth;
 
     if (dir === SwipeDirections.LEFT) {
       // 下一张
-      newTranslateX = activeIndex === lastIndex ? isTranslate : (isTranslate + absX);
+      // newTranslateX = activeIndex === lastIndex ? isTranslate : (isTranslate + absX);
+      if (resistanceDistance && absX > resistanceDistance) {
+        newTranslateX = isTranslate + resistanceDistance;
+      } else {
+        newTranslateX = isTranslate + absX;
+      }
     } else if (dir === SwipeDirections.RIGHT) {
       // 上一张
-      newTranslateX = activeIndex === 0 ? 0 : (isTranslate - carouselWidth - absX);
+      newTranslateX = activeIndex === 0 ? 0 : (isTranslate - client.clientWidth - absX);
     }
 
     setTranslateX(newTranslateX);
   };
 
   const handleSwiped = (eventData:SwipeEventData) => {
-    const { absX, event, dir } = eventData;
+    const { absX, dir } = eventData;
     // 阈值
-    let threshold = 90;
-    let carouselWidth = 0;
-    if (event.target) {
-      // carouselWidth = event.target.clientWidth;
-      carouselWidth = 375;
-      threshold = carouselWidth / 4;
-    }
+    const threshold = client.clientWidth / 4;
+    // let carouselWidth = 0;
+    // if (event.target) {
+    //   carouselWidth = event.target.clientWidth;
+    //   threshold = carouselWidth / 4;
+    // }
 
     let newTranslateX = 0;
-    const isTranslate = activeIndex === 0 ? 0 : activeIndex * carouselWidth;
-
-    console.log('handleSwiped', eventData);
+    const isTranslate = activeIndex === 0 ? 0 : activeIndex * client.clientWidth;
 
     if (dir === SwipeDirections.LEFT) {
       // 下一张
       if (absX > threshold) {
-        newTranslateX = activeIndex === lastIndex ? isTranslate : (isTranslate + carouselWidth);
+        newTranslateX = activeIndex === lastIndex ? isTranslate : (isTranslate + client.clientWidth);
         afterSlide(activeIndex === lastIndex ? lastIndex : activeIndex + 1);
       } else {
         newTranslateX = isTranslate;
@@ -108,7 +117,7 @@ export const Carousel:FC<CarouselProps> = ({ children, onSlideChange, noSwipingS
     } else if (dir === SwipeDirections.RIGHT) {
       // 上一张
 
-      newTranslateX = activeIndex === 0 ? 0 : (isTranslate - carouselWidth);
+      newTranslateX = activeIndex === 0 ? 0 : (isTranslate - client.clientWidth);
 
       if (absX > threshold) {
         afterSlide(activeIndex === 0 ? 0 : activeIndex - 1);
@@ -116,6 +125,10 @@ export const Carousel:FC<CarouselProps> = ({ children, onSlideChange, noSwipingS
     }
 
     setTranslateX(newTranslateX);
+  };
+
+  const handleFullscreenClose = () => {
+    onFullscreenClose && onFullscreenClose();
   };
 
   const handlers = useSwipeable({
@@ -128,21 +141,52 @@ export const Carousel:FC<CarouselProps> = ({ children, onSlideChange, noSwipingS
     onSwiped: (eventData) => handleSwiped(eventData),
     onSwiping: (eventData) => handleSwiping(eventData),
     preventDefaultTouchmoveEvent: true,
-    // mousedown
     trackMouse: false,
     noSwipingSelector,
   });
 
+  const refCallback = (ref:HTMLDivElement) => {
+    handlers.ref(ref);
+
+    if (!client.clientWidth && ref) {
+      const { width, height } = ref?.getBoundingClientRect();
+
+      setClient({
+        clientWidth: width,
+        clientHeight: height,
+      });
+    }
+  };
+
+  const lastItemStyle = fullscreen ? { height: `${client.clientHeight }px`, color: '#fff' } : { height: `${client.clientHeight }px` };
+  console.log('render', client.clientWidth, client.clientHeight);
+
   return (
     <div
       {...handlers}
-      className={classNames('carousel-wrapper', className)}
+      ref={refCallback}
+      className={classnames('carousel-wrapper', { ['carousel-wrapper-fullscreen']: fullscreen })}
     >
+      {fullscreen ? <div
+        onClick={handleFullscreenClose}
+        className="carousel-wrapper-close"><img
+          src={closeSvg}
+          alt=""/></div> : null}
       <div
         className="carousel-wrapper-inner"
         style={{ transform: `translateX(-${translateX}px)` }}
+        // style={{ transform: `translateX(-${1305}px)` }}
       >
         {React.Children.map(children, (child:any) => React.cloneElement(child, { width: '100%' }))}
+        {lastSlideMessage
+          ? <CarouselItem
+            className="carousel-wrapper-inner-item-last"
+            key="carousel-wrapper-item-last"
+            style={lastItemStyle}
+          >
+            {lastSlideMessage}
+          </CarouselItem> : null
+        }
       </div>
       <div className="carousel-wrapper-indicators">
         {activeIndex + 1}/{count}
