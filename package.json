@@ -1,6 +1,6 @@
 {
   "name": "@mlz/swiper",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "```tsx     <Carousel         onSlideChange={(activeIndex) => handleSlideChange(activeIndex)}         className=\"detail-wrap-swiper-container\"         // 不监听拖拉的区域         noSwipingSelector=\"#mlz-controller\"         // fullscreen={fullscreen}         // onFullscreenClose={handleFullscreenClose}         // 抵抗距离 第一个或者最后一个的时候，可以拉动的距离         resistanceDistance={84}         // 最后一张时，继续拖拉的文案         lastSlideMessage=\"最后一张了\"       >         {pictures.map((item, index) => <CarouselItem           onClick={handleCarouselClick}           key={`course-detail-swiper-${ index}`}>           <img             className=\"detail-wrap-swiper-container-img\"             src={item} />         </CarouselItem>)}     </Carousel> ```",
   "keywords": [
     "swiper",
