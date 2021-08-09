@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.2.0 (2021-08-09)
+
+
+### Features
+
+* init ([0de5689](https://github.com/juicecube/mlz-swiper/commit/0de568986ddbbe382d1fea8e0fb4ee3fdfd37cd5))
+* init ([d49fe6f](https://github.com/juicecube/mlz-swiper/commit/d49fe6f5ec3ff4ba0b6bed5eb031854c6226cb69))
+* npmrc ([b054b2a](https://github.com/juicecube/mlz-swiper/commit/b054b2af8f65af47947398f869d8ce6c41794d3c))
+* readme ([3fe1a99](https://github.com/juicecube/mlz-swiper/commit/3fe1a999b2ba06b5c30c20e9a17f4cecd5483749))
+
+
+### Bug Fixes
+
+* npm init ([6a2174e](https://github.com/juicecube/mlz-swiper/commit/6a2174e395807772bc9ee33de9598996b6778def))
+
 ## 1.1.0 (2021-08-05)
 
 
