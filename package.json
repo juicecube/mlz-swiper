@@ -85,7 +85,6 @@
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
-    "@frontend/yuumi": "^0.3.8",
     "@mlz/lint": "^1.2.1",
     "@mlz/pack": "^1.1.5",
     "@rollup/plugin-commonjs": "^19.0.2",
